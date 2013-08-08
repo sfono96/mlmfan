@@ -1,14 +1,15 @@
 from pprint import pprint as pp
-import urllib2, simplejson, cgi
+import urllib2, simplejson, urllib
 from tagzapper import strip_tags
 
-query = 'Xango'
+query = 'Morinda Bioactives'
 
 # news
 def gnews(query):
 	
 	# query google
-	news_url = ('https://ajax.googleapis.com/ajax/services/search/news?v=1.0&q=%s&rsz=3&ned=us') % query
+	news_url = ('https://ajax.googleapis.com/ajax/services/search/news?v=1.0&q=%s&rsz=3&ned=us') % urllib.quote_plus(query)
+	print news_url
 	news_request = urllib2.Request(news_url, None)
 	news_response = urllib2.urlopen(news_request)
 
@@ -24,6 +25,7 @@ def gnews(query):
 		top_three[i] = {}
 		top_three[i]['title'] = strip_tags(r['title'].encode('ascii','ignore'))
 		top_three[i]['url'] = r['unescapedUrl']
+		top_three[i]['content'] = strip_tags(r['content'].encode('ascii','ignore'))
 	
 	return top_three
 
@@ -44,4 +46,4 @@ def gblogs(query):
 		i += 1
 		print i, r['title'].encode('ascii','ignore')
 
-#print pp(gnews(query))
+print pp(gnews(query))
